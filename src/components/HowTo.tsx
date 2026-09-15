@@ -1,5 +1,6 @@
 import type { GameClass } from "../types";
 import { copy } from "../copy";
+import { classHref, iconSrc } from "../paths";
 
 interface HowToProps {
   classes: GameClass[];
@@ -55,14 +56,14 @@ export function HowTo({ classes, onSelect }: HowToProps) {
           {classes.map((gameClass) => (
             <a
               key={gameClass.id}
-              href={`/${gameClass.id}`}
+              href={classHref(gameClass.id)}
               style={{ ["--class-color" as string]: gameClass.color }}
               onClick={(event) => {
                 event.preventDefault();
                 onSelect(gameClass.id);
               }}
             >
-              <img src={`/icons/${gameClass.icon}.jpg`} width={36} height={36} alt="" />
+              <img src={iconSrc(gameClass.icon)} width={36} height={36} alt="" />
               <div>
                 <strong>{gameClass.name}</strong>
                 <span>{gameClass.trees.map((tree) => tree.name).join(" · ")}</span>

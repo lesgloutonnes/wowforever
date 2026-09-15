@@ -13,6 +13,7 @@ import {
   treeSpent,
 } from "../engine";
 import { decodeBuild, encodeBuild } from "../encode";
+import { historyUrl, pageUrl, iconSrc } from "../paths";
 import { deleteNamedBuild, readDraft, readSavedBuilds, saveNamedBuild, writeDraft } from "../storage";
 import { Icon } from "./Icon";
 import { TalentDetail } from "./TalentDetail";
@@ -35,7 +36,6 @@ export function Calculator({ gameClass }: CalculatorProps) {
   const [saves, setSaves] = useState<SavedBuild[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [buildName, setBuildName] = useState("");
-  const [origin, setOrigin] = useState("");
   const [copied, setCopied] = useState(false);
   const [canShare, setCanShare] = useState(false);
 
@@ -50,10 +50,9 @@ export function Calculator({ gameClass }: CalculatorProps) {
   const editable = ready && !loadError;
   const spent = spentPoints(build);
   const left = pointsBudget(build.level) - spent;
-  const shareUrl = `${origin}/${gameClass.id}${encodeBuild(build)}`;
+  const shareUrl = pageUrl(gameClass.id, encodeBuild(build));
 
   useEffect(() => {
-    setOrigin(window.location.origin);
     setCanShare(typeof navigator.share === "function");
     let storage: Storage | null = null;
     try {
@@ -71,7 +70,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
         announce(shared ? copy.calculator.sharedLoaded : copy.calculator.draftRestored);
       } else {
         setLoadError(formatError(decoded.error));
-        setBrokenLink(shared ? window.location.href : `${window.location.origin}/${gameClass.id}${hash}`);
+        setBrokenLink(shared ? window.location.href : pageUrl(gameClass.id, hash));
         announce(copy.calculator.keptUnchanged, true);
       }
     };
@@ -132,7 +131,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
     }
     setBuild(result.value);
     setLoadError(null);
-    window.history.replaceState(null, "", `${window.location.pathname}${encodeBuild(result.value)}`);
+    window.history.replaceState(null, "", historyUrl(gameClass.id, encodeBuild(result.value)));
     announce(message);
   }
 
@@ -216,7 +215,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
     <div className={`calculator${selection ? " sheet-open" : ""}`} id="calculator">
       <div className="planner-heading">
         <div className="current-class">
-          <img src={`/icons/${gameClass.icon}.jpg`} width={38} height={38} alt="" />
+          <img src={iconSrc(gameClass.icon)} width={38} height={38} alt="" />
           <div>
             <span className="eyebrow">{ui.character}</span>
             <h2>{fill(ui.treesHeading, { class: gameClass.name })}</h2>

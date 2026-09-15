@@ -9,7 +9,12 @@
       name="description"
       content="Planifiez un build de talents WoW Forever pour les neuf classes. Comparez Classic, enregistrez et partagez chaque point."
     />
-    <link rel="icon" type="image/jpeg" href="/icons/class_warrior.jpg" />
+    <link rel="icon" type="image/jpeg" href="./icons/class_warrior.jpg" />
+    <script id="file-protocol-redirect">
+      if (location.protocol === "file:" && !/\/app\/index\.html$/i.test(location.pathname.replace(/\\/g, "/"))) {
+        location.replace("app/index.html" + location.search + location.hash);
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
