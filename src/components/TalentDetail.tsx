@@ -1,6 +1,7 @@
 import type { Talent, TalentTree } from "../types";
 import { copy, fill } from "../copy";
 import { nearestRankText, rankText } from "../engine";
+import { iconSrc } from "../paths";
 import { Icon } from "./Icon";
 
 interface TalentDetailProps {
@@ -87,7 +88,7 @@ export function TalentDetail({
     <aside className="talent-detail has-selection" aria-label={copy.detail.selected}>
       <div className="sheet-handle" aria-hidden="true" />
       <div className="detail-heading">
-        <img src={`/icons/${talent.icon}.jpg`} width={44} height={44} alt="" />
+        <img src={iconSrc(talent.icon)} width={44} height={44} alt="" />
         <div>
           <span className="eyebrow">
             {tree.name} · {talent.passive ? copy.detail.passive : copy.detail.active}

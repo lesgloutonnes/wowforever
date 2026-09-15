@@ -1,25 +1,24 @@
 # WoW Forever Talents
 
-Simulateur de talents pour *World of Warcraft: Forever*, calqué sur l’expérience d’un calculateur classique à trois arbres.
+Simulateur de talents pour *World of Warcraft: Forever*.
 
-- Neuf classes, 51 points au niveau 60
-- Clic pour apprendre, clic droit / Maj+clic pour rembourser
-- Portes de ligne (5 points par rangée du même arbre) et prérequis
-- Comparaison avec Classic
-- Brouillons locaux, builds nommés et liens partageables
+## Ouvrir en local (sans serveur)
 
-## Développement
+Double-cliquez sur **`index.html`** à la racine du dossier. Aucun `npm`, aucun localhost.
+
+Laissez le dossier `public/` à côté de `index.html` (icônes et fonds). Vous pouvez copier tout le projet ailleurs, tant que ces deux éléments restent ensemble.
+
+## Développement (optionnel)
 
 ```bash
 npm install
 npm test
 npm run dev
+npm run build
 ```
 
-Le calculateur est servi sur `http://localhost:5173`. Les routes `/warrior`, `/mage`, etc. ouvrent directement une classe.
+`npm run build` régénère `index.html` (JS et CSS intégrés).
 
 ## Données
 
-Les arbres et tooltips proviennent de [talentsforever.com](https://talentsforever.com) (CC BY 4.0), transcrits depuis la démo BlizzCon 2026. Les noms, icônes et textes appartiennent à Blizzard Entertainment. Fan-made, non affilié à Blizzard.
-
-Les rangs absents de la démo restent non vérifiés : aucune valeur n’est inventée.
+Les arbres et tooltips proviennent de [talentsforever.com](https://talentsforever.com) (CC BY 4.0), transcrits depuis la démo BlizzCon 2026. Noms, icônes et textes : Blizzard Entertainment. Fan-made, non affilié à Blizzard.

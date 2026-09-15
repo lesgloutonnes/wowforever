@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import dataset from "./data/talents.json";
 import type { GameClass, TalentDataset } from "./types";
 import { copy } from "./copy";
+import { classFromLocation, classHref } from "./paths";
 import { Header } from "./components/Header";
 import { ClassNav } from "./components/ClassNav";
 import { Calculator } from "./components/Calculator";
@@ -9,14 +10,11 @@ import { HowTo } from "./components/HowTo";
 
 const talentData = dataset as TalentDataset;
 
-function classFromPath(classes: GameClass[]): GameClass {
-  const segment = window.location.pathname.replace(/^\/+|\/+$/g, "").toLowerCase();
-  return classes.find((item) => item.id === segment) ?? classes[0];
-}
-
 export default function App() {
   const classes = talentData.classes;
-  const [current, setCurrent] = useState<GameClass>(() => (typeof window === "undefined" ? classes[0] : classFromPath(classes)));
+  const [current, setCurrent] = useState<GameClass>(() =>
+    typeof window === "undefined" ? classes[0] : classFromLocation(classes),
+  );
 
   const currentClass = useMemo(
     () => classes.find((item) => item.id === current.id) ?? classes[0],
@@ -24,15 +22,19 @@ export default function App() {
   );
 
   useEffect(() => {
-    const sync = () => setCurrent(classFromPath(classes));
+    const sync = () => setCurrent(classFromLocation(classes));
     window.addEventListener("popstate", sync);
-    return () => window.removeEventListener("popstate", sync);
+    window.addEventListener("hashchange", sync);
+    return () => {
+      window.removeEventListener("popstate", sync);
+      window.removeEventListener("hashchange", sync);
+    };
   }, [classes]);
 
   function selectClass(classId: string) {
     const next = classes.find((item) => item.id === classId);
     if (!next) return;
-    window.history.pushState(null, "", `/${next.id}`);
+    window.history.pushState(null, "", classHref(next.id));
     setCurrent(next);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
