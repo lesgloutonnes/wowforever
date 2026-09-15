@@ -400,7 +400,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
           {loadError ? ui.originalKept : ready ? (storageOk ? ui.draftSaved : ui.storageShort) : ui.restoring}
         </span>
         <span>
-          {ui.previewFooter} <a href="#sources">{ui.sourcesLink}</a>
+          {ui.previewFooter} <a href="#classes">{ui.sourcesLink}</a>
         </span>
       </div>
 

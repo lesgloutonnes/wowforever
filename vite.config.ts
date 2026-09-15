@@ -65,6 +65,9 @@ function writeRootStandalone(): Plugin {
         "<head>",
         "<head>\n    <!-- Version autonome : double-cliquez ce fichier. Pas de serveur. -->",
       );
+      if (!html.includes('data-theme="alliance"')) {
+        html = html.replace("<html", '<html data-theme="alliance"');
+      }
       writeFileSync(join(import.meta.dirname, "index.html"), html);
       rmSync(join(dist, "assets"), { recursive: true, force: true });
     },

@@ -1,6 +1,7 @@
 import type { GameClass } from "../types";
 import { copy } from "../copy";
 import { classHref } from "../paths";
+import { ThemeSwitch } from "./ThemeSwitch";
 
 interface HeaderProps {
   currentClass: GameClass;
@@ -19,11 +20,9 @@ export function Header({ currentClass }: HeaderProps) {
             {copy.header.calc}
           </a>
           <a href="#guide">{copy.header.how}</a>
-          <a href="#sources">{copy.header.sources}</a>
+          <a href="#classes">{copy.header.classes}</a>
         </nav>
-        <span className="header-badge">
-          <i /> {copy.header.badge}
-        </span>
+        <ThemeSwitch />
       </div>
     </header>
   );

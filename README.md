@@ -1,6 +1,6 @@
-# WoW Forever Talents
+# Forge des talents
 
-Simulateur de talents pour *World of Warcraft: Forever*.
+Simulateur de talents pour *World of Warcraft*. Planifiez un build, comparez avec Classic, enregistrez et partagez.
 
 ## Ouvrir en local (sans serveur)
 
@@ -19,6 +19,6 @@ npm run build
 
 `npm run build` régénère `index.html` (JS et CSS intégrés).
 
-## Données
+## Mentions
 
-Les arbres et tooltips proviennent de [talentsforever.com](https://talentsforever.com) (CC BY 4.0), transcrits depuis la démo BlizzCon 2026. Noms, icônes et textes : Blizzard Entertainment. Fan-made, non affilié à Blizzard.
+Noms, icônes et textes : Blizzard Entertainment. Fan-made, non affilié à Blizzard.

@@ -1,19 +1,21 @@
 import type { EngineError } from "./types";
 
 export const copy = {
-  siteName: "WoW Forever Talents",
+  siteName: "Forge des talents",
   header: {
-    brand: "WoW Forever",
-    brandSub: "Simulateur de talents",
+    brand: "Forge des talents",
+    brandSub: "Simulateur",
     calc: "Calculateur",
     how: "Guide",
-    sources: "Sources",
-    badge: "Aperçu BlizzCon",
+    classes: "Classes",
+    theme: "Thème de faction",
+    alliance: "Alliance",
+    horde: "Horde",
   },
   hero: {
     label: "Préparez votre prochaine répartition",
     titleBefore: "Calculateur de talents",
-    titleEm: "WoW Forever",
+    titleEm: "neuf classes",
     body: "Planifiez un build pour chacune des neuf classes. Comparez les changements depuis Classic, enregistrez votre setup et partagez chaque point.",
     meta: ["9 classes", "51 points de talents", "Gratuit · Sans compte"],
   },
@@ -54,8 +56,8 @@ export const copy = {
     legendUnchanged: "Grisé = inchangé depuis Classic",
     legendHint: "Le texte Classic apparaît dans chaque infobulle.",
     treeTabs: "Choisir un arbre",
-    previewFooter: "Aperçu BlizzCon ·",
-    sourcesLink: "Données et sources",
+    previewFooter: "Fan-made ·",
+    sourcesLink: "Toutes les classes",
     readAll: "Lire tous les talents {class}",
     shareBar: "Partager le build",
     shareEyebrow: "Un lien. Chaque point de talent.",
@@ -63,7 +65,7 @@ export const copy = {
     shareInput: "Lien du build",
     copyLink: "Copier le lien",
     share: "Partager",
-    shareTitle: "Build {class} — WoW Forever",
+    shareTitle: "Build {class} — Forge des talents",
     shareFailed: "Le partage a échoué",
     loadErrorTitle: "Impossible de charger ce build",
     originalLink: "Lien d’origine",
@@ -116,7 +118,7 @@ export const copy = {
     firstRank: "Premier rang",
     nextRank: "Rang suivant ({rank})",
     unverified: "Rang {rank} non vérifié",
-    unverifiedBody: "Ce rang n’a pas été lu dans la démo BlizzCon. Les valeurs manquantes ne sont pas inventées.",
+    unverifiedBody: "Ce rang n’a pas encore été vérifié. Les valeurs manquantes ne sont pas inventées.",
     rankReference: "Texte le plus proche (rang {rank}) :",
     sourceEstimate: "Estimation de source",
     sourceNote: "Note : {note}",
@@ -184,7 +186,7 @@ export const copy = {
   },
   faq: {
     title: "Questions fréquentes",
-    intro: "Réponses sur les données d’aperçu, les limites de points et les builds enregistrés.",
+    intro: "Réponses sur les données, les limites de points et les builds enregistrés.",
     items: [
       {
         q: "Ce calculateur est-il gratuit ?",
@@ -192,7 +194,7 @@ export const copy = {
       },
       {
         q: "Puis-je coller un build Classic Era ?",
-        a: "Servez-vous-en comme point de départ, puis vérifiez chaque choix. Ce calculateur utilise les règles de l’aperçu BlizzCon : positions, effets et prérequis peuvent différer de Classic Era.",
+        a: "Servez-vous-en comme point de départ, puis vérifiez chaque choix. Ce calculateur utilise ses propres règles : positions, effets et prérequis peuvent différer de Classic Era.",
       },
       {
         q: "Pourquoi mon build ne tient-il pas à un niveau plus bas ?",
@@ -205,8 +207,16 @@ export const copy = {
     ],
   },
   footer: {
-    credit: "Données transcrites par talentsforever.com (CC BY 4.0) à partir des tooltips de la démo BlizzCon 2026. Noms, icônes et textes appartiennent à Blizzard Entertainment. Fan-made, non affilié à Blizzard.",
+    tagline: "Fan-made · Niveau 60 = 51 points",
+    credit:
+      "Noms, icônes et textes appartiennent à Blizzard Entertainment. Projet fan-made, non affilié à Blizzard.",
     note: "Les rangs manquants restent non vérifiés : aucune valeur n’est inventée pour combler les trous.",
+  },
+  directory: {
+    eyebrow: "Toutes les classes",
+    title: "Neuf arbres à forger",
+    intro:
+      "Chaque classe conserve son propre brouillon. Revenez à votre répartition après avoir exploré une autre spécialisation.",
   },
 };
 

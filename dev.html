@@ -1,15 +1,26 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-theme="alliance">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#101310" />
-    <title>Calculateur de talents WoW Forever</title>
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0b1220" />
+    <title>Forge des talents</title>
     <meta
       name="description"
-      content="Planifiez un build de talents WoW Forever pour les neuf classes. Comparez Classic, enregistrez et partagez chaque point."
+      content="Planifiez un build de talents pour les neuf classes. Comparez Classic, enregistrez et partagez chaque point."
     />
     <link rel="icon" type="image/jpeg" href="/icons/class_warrior.jpg" />
+    <script>
+      (function () {
+        var t = "alliance";
+        try {
+          var s = localStorage.getItem("wowforever:theme");
+          if (s === "horde" || s === "alliance") t = s;
+        } catch (e) {}
+        document.documentElement.setAttribute("data-theme", t);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
