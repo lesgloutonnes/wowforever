@@ -14,8 +14,8 @@ export const copy = {
   },
   hero: {
     label: "Préparez votre prochaine répartition",
-    titleBefore: "Calculateur de talents",
-    titleEm: "neuf classes",
+    titleBefore: "Forgez vos",
+    titleEm: "talents",
     body: "Planifiez un build pour chacune des neuf classes. Comparez les changements depuis Classic, enregistrez votre setup et partagez chaque point.",
     meta: ["9 classes", "51 points de talents", "Gratuit · Sans compte"],
   },
