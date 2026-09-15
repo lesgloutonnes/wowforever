@@ -72,14 +72,12 @@ export default function App() {
       <footer className="site-footer">
         <div>
           <div className="footer-brand">{copy.siteName}</div>
-          <p>Fan-made · Aperçu BlizzCon 2026 · Niveau 60 = 51 points</p>
+          <p>{copy.footer.tagline}</p>
         </div>
         <div className="footer-links">
           <a href="#guide">{copy.header.how}</a>
           <a href="#faq">FAQ</a>
-          <a href="https://talentsforever.com" target="_blank" rel="noreferrer">
-            talentsforever.com
-          </a>
+          <a href="#classes">{copy.header.classes}</a>
         </div>
         <p className="preview-credit">{copy.footer.credit}</p>
       </footer>

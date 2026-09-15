@@ -46,12 +46,10 @@ export function HowTo({ classes, onSelect }: HowToProps) {
         </div>
       </section>
 
-      <section className="content-section" id="sources">
-        <p className="eyebrow">Toutes les classes</p>
-        <h2>Talents WoW Forever</h2>
-        <p className="section-intro">
-          Chaque classe conserve son propre brouillon. Revenez à votre répartition après avoir exploré une autre spécialisation.
-        </p>
+      <section className="content-section" id="classes">
+        <p className="eyebrow">{copy.directory.eyebrow}</p>
+        <h2>{copy.directory.title}</h2>
+        <p className="section-intro">{copy.directory.intro}</p>
         <div className="class-directory">
           {classes.map((gameClass) => (
             <a
