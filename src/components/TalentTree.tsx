@@ -2,6 +2,7 @@ import { useRef } from "react";
 import type { GameClass, TalentBuild, TalentTree } from "../types";
 import { copy, fill, formatError } from "../copy";
 import { applyPoint, learnBlocker, treeSpent } from "../engine";
+import { bgSrc, iconSrc } from "../paths";
 import { Icon } from "./Icon";
 
 interface TalentTreePanelProps {
@@ -38,7 +39,7 @@ export function TalentTreePanel({
   return (
     <section className={`tree-panel${active ? " active-tree" : ""}`} aria-label={fill(copy.tree.aria, { tree: tree.name })}>
       <header className="tree-header">
-        <img src={`/icons/${tree.icon}.jpg`} width={25} height={25} alt="" />
+        <img src={iconSrc(tree.icon)} width={25} height={25} alt="" />
         <h3>{tree.name}</h3>
         <span className="tree-point-count">
           {spent}
@@ -54,7 +55,7 @@ export function TalentTreePanel({
           <Icon name="reset" size={15} />
         </button>
       </header>
-      <div className="tree-canvas" style={{ ["--tree-art" as string]: `url('/bg/${tree.background}.jpg')` }}>
+      <div className="tree-canvas" style={{ ["--tree-art" as string]: `url('${bgSrc(tree.background)}')` }}>
         <svg className="talent-arrows" viewBox="0 0 400 602" preserveAspectRatio="none" aria-hidden="true">
           <defs>
             <marker id={`arrow-${tree.id}`} markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
@@ -127,7 +128,7 @@ export function TalentTreePanel({
                     onPoint(treeIndex, talentIndex, "remove");
                   }}
                 >
-                  <img src={`/icons/${talent.icon}.jpg`} alt="" width={48} height={48} draggable={false} />
+                  <img src={iconSrc(talent.icon)} alt="" width={48} height={48} draggable={false} />
                   <span className="node-rank">
                     {rank}
                     <i>/</i>

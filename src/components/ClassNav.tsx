@@ -1,4 +1,5 @@
 import type { GameClass } from "../types";
+import { classHref, iconSrc } from "../paths";
 
 interface ClassNavProps {
   classes: GameClass[];
@@ -12,7 +13,7 @@ export function ClassNav({ classes, currentId, onSelect }: ClassNavProps) {
       {classes.map((gameClass) => (
         <a
           key={gameClass.id}
-          href={`/${gameClass.id}`}
+          href={classHref(gameClass.id)}
           className={`class-link${gameClass.id === currentId ? " active" : ""}`}
           style={{ ["--class-color" as string]: gameClass.color }}
           onClick={(event) => {
@@ -20,7 +21,7 @@ export function ClassNav({ classes, currentId, onSelect }: ClassNavProps) {
             onSelect(gameClass.id);
           }}
         >
-          <img src={`/icons/${gameClass.icon}.jpg`} width={28} height={28} alt="" />
+          <img src={iconSrc(gameClass.icon)} width={28} height={28} alt="" />
           <span>{gameClass.name}</span>
         </a>
       ))}
