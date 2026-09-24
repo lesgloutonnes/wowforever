@@ -605,8 +605,14 @@ p {
   bottom: 0;
 }
 
-.theme-switch {
+.header-tools {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-switch {
   background: var(--theme-switch-bg);
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -1781,7 +1787,7 @@ kbd {
     padding-bottom: 12px;
   }
 
-  .theme-switch {
+  .header-tools {
     margin-left: 0;
   }
 

@@ -2,6 +2,8 @@ import { useRef } from "react";
 import type { GameClass, TalentBuild, TalentTree } from "../types";
 import { copy, fill, formatError } from "../copy";
 import { applyPoint, learnBlocker, prerequisiteIds, treeSpent } from "../engine";
+import { localizeError, talentLabel, treeLabel } from "../locale";
+import { useLocale } from "../locale-context";
 import { bgSrc, iconSrc } from "../paths";
 import { Icon } from "./Icon";
 
@@ -33,14 +35,18 @@ export function TalentTreePanel({
   onReset,
 }: TalentTreePanelProps) {
   const pointerKind = useRef<"mouse" | "touch" | "pen">("mouse");
+  const locale = useLocale();
   const ranks = build.ranks[treeIndex];
   const spent = treeSpent(ranks);
+  const treeName = treeLabel(locale, gameClass, treeIndex);
+  const showError = (error: Parameters<typeof formatError>[0]) =>
+    formatError(localizeError(locale, gameClass, error));
 
   return (
-    <section className={`tree-panel${active ? " active-tree" : ""}`} aria-label={fill(copy.tree.aria, { tree: tree.name })}>
+    <section className={`tree-panel${active ? " active-tree" : ""}`} aria-label={fill(copy.tree.aria, { tree: treeName })}>
       <header className="tree-header">
         <img src={iconSrc(tree.icon)} width={25} height={25} alt="" />
-        <h3>{tree.name}</h3>
+        <h3>{treeName}</h3>
         <span className="tree-point-count">
           {spent}
           <small> / 51</small>
@@ -48,7 +54,7 @@ export function TalentTreePanel({
         <button
           type="button"
           className="icon-button"
-          aria-label={fill(copy.tree.reset, { tree: tree.name })}
+          aria-label={fill(copy.tree.reset, { tree: treeName })}
           disabled={!ready || spent === 0}
           onClick={() => onReset(treeIndex)}
         >
@@ -90,6 +96,7 @@ export function TalentTreePanel({
             const refund = applyPoint(build, gameClass, treeIndex, talentIndex, -1);
             const state = rank >= talent.maxRank ? "maxed" : rank > 0 ? "learned" : blocker ? "locked" : "available";
             const classicStatus = talent.classic.status;
+            const name = talentLabel(locale, gameClass, treeIndex, talent);
             return (
               <div
                 key={talent.id}
@@ -100,14 +107,14 @@ export function TalentTreePanel({
                   type="button"
                   className="talent-node"
                   disabled={!ready}
-                  aria-label={fill(copy.tree.node, { talent: talent.name, rank, max: talent.maxRank })}
+                  aria-label={fill(copy.tree.node, { talent: name, rank, max: talent.maxRank })}
                   aria-pressed={selectedId === talent.id}
                   title={
                     blocker && rank === 0
-                      ? formatError(blocker)
+                      ? showError(blocker)
                       : !refund.ok && rank > 0
-                        ? formatError(refund.error)
-                        : talent.name
+                        ? showError(refund.error)
+                        : name
                   }
                   onPointerDown={(event) => {
                     pointerKind.current = event.pointerType === "mouse" ? "mouse" : event.pointerType === "pen" ? "pen" : "touch";
@@ -146,7 +153,7 @@ export function TalentTreePanel({
                     </span>
                   )}
                 </button>
-                <span className="talent-name">{talent.name}</span>
+                <span className="talent-name">{name}</span>
               </div>
             );
           })}

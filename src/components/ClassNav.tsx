@@ -1,4 +1,6 @@
 import type { GameClass } from "../types";
+import { classLabel } from "../locale";
+import { useLocale } from "../locale-context";
 import { classHref, iconSrc } from "../paths";
 
 interface ClassNavProps {
@@ -8,6 +10,7 @@ interface ClassNavProps {
 }
 
 export function ClassNav({ classes, currentId, onSelect }: ClassNavProps) {
+  const locale = useLocale();
   return (
     <nav className="class-nav" aria-label="Choisir une classe">
       {classes.map((gameClass) => (
@@ -22,7 +25,7 @@ export function ClassNav({ classes, currentId, onSelect }: ClassNavProps) {
           }}
         >
           <img src={iconSrc(gameClass.icon)} width={28} height={28} alt="" />
-          <span>{gameClass.name}</span>
+          <span>{classLabel(locale, gameClass)}</span>
         </a>
       ))}
     </nav>

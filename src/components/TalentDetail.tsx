@@ -1,12 +1,16 @@
-import type { Talent, TalentTree } from "../types";
+import type { GameClass, Talent, TalentTree } from "../types";
 import { copy, fill } from "../copy";
 import { nearestRankText, prerequisiteIds, rankText } from "../engine";
+import { classicTextLabel, classicTreeLabel, costLabel, rankLabel, requirementLabel, talentLabel, treeLabel } from "../locale";
+import { useLocale } from "../locale-context";
 import { iconSrc } from "../paths";
 import { Icon } from "./Icon";
 
 interface TalentDetailProps {
   talent: Talent | null;
   tree: TalentTree | null;
+  treeIndex: number;
+  gameClass: GameClass;
   rank: number;
   compare: boolean;
   addError: string | null;
@@ -16,7 +20,7 @@ interface TalentDetailProps {
   onClose: () => void;
 }
 
-function RankDescription({ talent, rank }: { talent: Talent; rank: number }) {
+function RankDescription({ talent, rank, text }: { talent: Talent; rank: number; text: string | null }) {
   const exact = rankText(talent, rank);
   if (!exact) {
     const nearest = nearestRankText(talent, rank);
@@ -35,7 +39,7 @@ function RankDescription({ talent, rank }: { talent: Talent; rank: number }) {
   return (
     <div className="rank-description">
       {exact.confidence === "estimated" && <span className="verification-tag">{copy.detail.sourceEstimate}</span>}
-      <p>{exact.text}</p>
+      <p>{text ?? exact.text}</p>
     </div>
   );
 }
@@ -43,6 +47,8 @@ function RankDescription({ talent, rank }: { talent: Talent; rank: number }) {
 export function TalentDetail({
   talent,
   tree,
+  treeIndex,
+  gameClass,
   rank,
   compare,
   addError,
@@ -51,6 +57,7 @@ export function TalentDetail({
   onRemove,
   onClose,
 }: TalentDetailProps) {
+  const locale = useLocale();
   if (!talent || !tree) {
     return (
       <aside className="talent-detail empty-detail">
@@ -73,6 +80,8 @@ export function TalentDetail({
     );
   }
 
+  const name = talentLabel(locale, gameClass, treeIndex, talent);
+  const treeName = treeLabel(locale, gameClass, treeIndex);
   const prereqs = prerequisiteIds(talent)
     .map((id) => tree.talents.find((item) => item.id === id))
     .filter((item): item is NonNullable<typeof item> => !!item);
@@ -93,9 +102,9 @@ export function TalentDetail({
         <img src={iconSrc(talent.icon)} width={44} height={44} alt="" />
         <div>
           <span className="eyebrow">
-            {tree.name} · {talent.passive ? copy.detail.passive : copy.detail.active}
+            {treeName} · {talent.passive ? copy.detail.passive : copy.detail.active}
           </span>
-          <h3>{talent.name}</h3>
+          <h3>{name}</h3>
         </div>
         <button type="button" className="icon-button sheet-close" aria-label={copy.detail.close} onClick={onClose}>
           <Icon name="close" />
@@ -111,16 +120,20 @@ export function TalentDetail({
           ))}
         </div>
       </div>
-      {talent.cost && <p className="talent-cost">{talent.cost}</p>}
-      {talent.requirementText && <p className="talent-cost">{talent.requirementText}</p>}
+      {costLabel(locale, gameClass, treeIndex, talent) && (
+        <p className="talent-cost">{costLabel(locale, gameClass, treeIndex, talent)}</p>
+      )}
+      {requirementLabel(locale, gameClass, treeIndex, talent) && (
+        <p className="talent-cost">{requirementLabel(locale, gameClass, treeIndex, talent)}</p>
+      )}
       <section className="rank-block">
         <h4>{rank ? copy.detail.currentRank : copy.detail.firstRank}</h4>
-        <RankDescription talent={talent} rank={shownRank} />
+        <RankDescription talent={talent} rank={shownRank} text={rankLabel(locale, gameClass, treeIndex, talent, shownRank)} />
       </section>
       {rank > 0 && rank < talent.maxRank && (
         <section className="rank-block next-rank">
           <h4>{fill(copy.detail.nextRank, { rank: rank + 1 })}</h4>
-          <RankDescription talent={talent} rank={rank + 1} />
+          <RankDescription talent={talent} rank={rank + 1} text={rankLabel(locale, gameClass, treeIndex, talent, rank + 1)} />
         </section>
       )}
       {talent.note && <p className="data-note">{fill(copy.detail.sourceNote, { note: talent.note })}</p>}
@@ -137,21 +150,23 @@ export function TalentDetail({
             <p>{copy.detail.newTalent}</p>
           ) : (
             <>
-              {talent.classic.text && <p>{talent.classic.text}</p>}
+              {classicTextLabel(locale, gameClass, treeIndex, talent) && (
+                <p>{classicTextLabel(locale, gameClass, treeIndex, talent)}</p>
+              )}
               <small>
                 {fill(copy.detail.classicMeta, {
-                  name: talent.classic.renamed ?? talent.name,
-                  tree: talent.classic.tree ?? tree.name,
+                  name: talent.classic.renamed ?? name,
+                  tree: classicTreeLabel(locale, gameClass, treeIndex, talent) ?? treeName,
                   max: talent.classic.max ?? 0,
                 })}
               </small>
               {talent.classic.moved && (
                 <small>
                   {fill(copy.detail.movedFrom, {
-                    fromTree: talent.classic.tree ?? "",
+                    fromTree: classicTreeLabel(locale, gameClass, treeIndex, talent) ?? "",
                     fromRow: talent.classic.row ?? 0,
                     fromCol: talent.classic.col ?? 0,
-                    toTree: tree.name,
+                    toTree: treeName,
                     toRow: talent.row,
                     toCol: talent.col,
                   })}
@@ -164,7 +179,12 @@ export function TalentDetail({
       <div className="talent-requirements">
         <span>{fill(copy.detail.rowReq, { row: talent.row, needed: (talent.row - 1) * 5 })}</span>
         {prereqs.map((prereq) => (
-          <span key={prereq.id}>{fill(copy.detail.requiresRanks, { max: prereq.maxRank, talent: prereq.name })}</span>
+          <span key={prereq.id}>
+            {fill(copy.detail.requiresRanks, {
+              max: prereq.maxRank,
+              talent: talentLabel(locale, gameClass, treeIndex, prereq),
+            })}
+          </span>
         ))}
       </div>
       <div className="detail-actions">

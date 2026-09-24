@@ -13,6 +13,8 @@ import {
   treeSpent,
 } from "../engine";
 import { decodeBuild, encodeBuild } from "../encode";
+import { classLabel, localizeError, talentLabel, treeLabel } from "../locale";
+import { useLocale } from "../locale-context";
 import { historyUrl, iconSrc, pageUrl } from "../paths";
 import { deleteNamedBuild, readDraft, readSavedBuilds, saveNamedBuild, writeDraft } from "../storage";
 import { Icon } from "./Icon";
@@ -24,6 +26,9 @@ interface CalculatorProps {
 }
 
 export function Calculator({ gameClass }: CalculatorProps) {
+  const locale = useLocale();
+  const showError = (error: Parameters<typeof formatError>[0]) =>
+    formatError(localizeError(locale, gameClass, error));
   const [build, setBuild] = useState<TalentBuild>(() => emptyBuild(gameClass));
   const [ready, setReady] = useState(false);
   const [compare, setCompare] = useState(false);
@@ -69,7 +74,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
         setLoadError(null);
         announce(shared ? copy.calculator.sharedLoaded : copy.calculator.draftRestored);
       } else {
-        setLoadError(formatError(decoded.error));
+        setLoadError(showError(decoded.error));
         setBrokenLink(shared ? window.location.href : pageUrl(gameClass.id, hash));
         announce(copy.calculator.keptUnchanged, true);
       }
@@ -84,7 +89,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
       else {
         storageRef.current = null;
         setStorageOk(false);
-        announce(formatError(draft.error), true);
+        announce(showError(draft.error), true);
       }
     } else {
       announce(copy.calculator.storageUnavailable, true);
@@ -93,7 +98,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
     if (storage) {
       const listed = readSavedBuilds(storage);
       if (listed.ok) setSaves(listed.value);
-      else announce(formatError(listed.error), true);
+      else announce(showError(listed.error), true);
     }
 
     setReady(true);
@@ -113,7 +118,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
     if (written.ok) setStorageOk(true);
     else {
       setStorageOk(false);
-      announce(formatError(written.error), true);
+      announce(showError(written.error), true);
     }
   }, [build, ready, loadError, gameClass.id]);
 
@@ -126,7 +131,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
 
   function commit(result: ReturnType<typeof applyPoint>, message: string) {
     if (!result.ok) {
-      announce(formatError(result.error), true);
+      announce(showError(result.error), true);
       return;
     }
     setBuild(result.value);
@@ -155,7 +160,9 @@ export function Calculator({ gameClass }: CalculatorProps) {
     lastTouchId.current = talent.id;
     commit(
       applyPoint(build, gameClass, treeIndex, talentIndex, mode === "remove" ? -1 : 1),
-      fill(mode === "remove" ? copy.calculator.pointRefunded : copy.calculator.rankLearned, { talent: talent.name }),
+      fill(mode === "remove" ? copy.calculator.pointRefunded : copy.calculator.rankLearned, {
+        talent: talentLabel(locale, gameClass, treeIndex, talent),
+      }),
     );
   }
 
@@ -193,7 +200,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
       setBuildName("");
       announce(fill(copy.calculator.savedNamed, { name: named.name }));
     } else {
-      announce(formatError(saved.error), true);
+      announce(showError(saved.error), true);
     }
   }
 
@@ -202,10 +209,10 @@ export function Calculator({ gameClass }: CalculatorProps) {
   const selectedRank = selection ? build.ranks[selection.treeIndex][selection.talentIndex] : 0;
   const addBlock = selection ? learnBlocker(build, gameClass, selection.treeIndex, selection.talentIndex) : null;
   const removeResult = selection ? applyPoint(build, gameClass, selection.treeIndex, selection.talentIndex, -1) : null;
-  const addError = editable ? (addBlock ? formatError(addBlock) : null) : copy.calculator.editBlocked;
+  const addError = editable ? (addBlock ? showError(addBlock) : null) : copy.calculator.editBlocked;
   const removeError = editable
     ? removeResult && !removeResult.ok
-      ? formatError(removeResult.error)
+      ? showError(removeResult.error)
       : null
     : copy.calculator.editBlocked;
   const classSaves = saves.filter((item) => item.classId === gameClass.id);
@@ -218,14 +225,14 @@ export function Calculator({ gameClass }: CalculatorProps) {
           <img src={iconSrc(gameClass.icon)} width={38} height={38} alt="" />
           <div>
             <span className="eyebrow">{ui.character}</span>
-            <h2>{fill(ui.treesHeading, { class: gameClass.name })}</h2>
+            <h2>{fill(ui.treesHeading, { class: classLabel(locale, gameClass) })}</h2>
           </div>
         </div>
         <div className="allocation-summary" aria-label={ui.pointsBySpec}>
           {gameClass.trees.map((tree, index) => (
             <span key={tree.id}>
               <strong>{treeSpent(build.ranks[index])}</strong>
-              <small>{tree.name}</small>
+              <small>{treeLabel(locale, gameClass, index)}</small>
             </span>
           ))}
         </div>
@@ -351,7 +358,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
               tabRefs.current[next]?.focus();
             }}
           >
-            {tree.name}
+            {treeLabel(locale, gameClass, index)}
             <span>{treeSpent(build.ranks[index])}</span>
           </button>
         ))}
@@ -373,7 +380,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
               onSelect={selectTalent}
               onPoint={handlePoint}
               onReset={(treeIndex) =>
-                commit(resetTree(build, gameClass, treeIndex), fill(ui.resetTree, { tree: gameClass.trees[treeIndex].name }))
+                commit(resetTree(build, gameClass, treeIndex), fill(ui.resetTree, { tree: treeLabel(locale, gameClass, treeIndex) }))
               }
             />
           ))}
@@ -381,6 +388,8 @@ export function Calculator({ gameClass }: CalculatorProps) {
         <TalentDetail
           talent={selectedTalent}
           tree={selectedTree}
+          treeIndex={selection?.treeIndex ?? 0}
+          gameClass={gameClass}
           rank={selectedRank}
           compare={compare}
           addError={addError}
@@ -428,7 +437,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
               type="button"
               onClick={async () => {
                 try {
-                  await navigator.share({ title: fill(ui.shareTitle, { class: gameClass.name }), url: shareUrl });
+                  await navigator.share({ title: fill(ui.shareTitle, { class: classLabel(locale, gameClass) }), url: shareUrl });
                 } catch (error) {
                   if (!(error instanceof DOMException && error.name === "AbortError")) announce(ui.shareFailed);
                 }
@@ -449,7 +458,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
         <div className="dialog-heading">
           <div>
             <span className="eyebrow">{ui.dialogEyebrow}</span>
-            <h2>{fill(ui.dialogTitle, { class: gameClass.name })}</h2>
+            <h2>{fill(ui.dialogTitle, { class: classLabel(locale, gameClass) })}</h2>
           </div>
           <button className="icon-button" type="button" aria-label={ui.closeSaves} onClick={() => setDialogOpen(false)}>
             <Icon name="close" />
@@ -468,7 +477,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
               id="build-name"
               value={buildName}
               onChange={(event) => setBuildName(event.target.value)}
-              placeholder={fill(ui.namePlaceholder, { class: gameClass.name })}
+              placeholder={fill(ui.namePlaceholder, { class: classLabel(locale, gameClass) })}
               maxLength={80}
               required
             />
@@ -513,7 +522,7 @@ export function Calculator({ gameClass }: CalculatorProps) {
                       setSaves(next.value);
                       announce(fill(ui.deletedNamed, { name: item.name }));
                     } else {
-                      announce(formatError(next.error), true);
+                      announce(showError(next.error), true);
                     }
                   }}
                 >

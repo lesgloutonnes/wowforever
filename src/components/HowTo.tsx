@@ -1,5 +1,7 @@
 import type { GameClass } from "../types";
 import { copy } from "../copy";
+import { classLabel, treeLabel } from "../locale";
+import { useLocale } from "../locale-context";
 import { classHref, iconSrc } from "../paths";
 
 interface HowToProps {
@@ -8,6 +10,7 @@ interface HowToProps {
 }
 
 export function HowTo({ classes, onSelect }: HowToProps) {
+  const locale = useLocale();
   return (
     <>
       <section className="content-section" id="guide">
@@ -63,8 +66,8 @@ export function HowTo({ classes, onSelect }: HowToProps) {
             >
               <img src={iconSrc(gameClass.icon)} width={36} height={36} alt="" />
               <div>
-                <strong>{gameClass.name}</strong>
-                <span>{gameClass.trees.map((tree) => tree.name).join(" · ")}</span>
+                <strong>{classLabel(locale, gameClass)}</strong>
+                <span>{gameClass.trees.map((_, index) => treeLabel(locale, gameClass, index)).join(" · ")}</span>
               </div>
               <span className="directory-arrow">→</span>
             </a>
