@@ -63,8 +63,8 @@ export function gateForTalent(
       params: { needed, treeId: tree.id, treeName: tree.name },
     };
   }
-  if (talent.prerequisite) {
-    const prereqIndex = tree.talents.findIndex((item) => item.id === talent.prerequisite);
+  for (const prereqId of prerequisiteIds(talent)) {
+    const prereqIndex = tree.talents.findIndex((item) => item.id === prereqId);
     const prereq = tree.talents[prereqIndex];
     if (!prereq) return { code: "missing-prerequisite" };
     if (ranks[prereqIndex] < prereq.maxRank) {
@@ -183,6 +183,11 @@ export function resetTree(
     ...build,
     ranks: build.ranks.map((ranks, index) => (index === treeIndex ? ranks.map(() => 0) : [...ranks])),
   }, gameClass);
+}
+
+export function prerequisiteIds(talent: Talent): string[] {
+  if (!talent.prerequisite) return [];
+  return Array.isArray(talent.prerequisite) ? talent.prerequisite : [talent.prerequisite];
 }
 
 export function rankText(talent: Talent, rank: number): RankText | null {
