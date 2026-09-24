@@ -9,6 +9,8 @@ export const copy = {
     how: "Guide",
     classes: "Classes",
     theme: "Thème de faction",
+    language: "Langue des talents",
+    languages: { fr: "FR", en: "EN" },
     alliance: "Alliance",
     horde: "Horde",
   },
