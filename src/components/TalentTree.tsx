@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import type { GameClass, TalentBuild, TalentTree } from "../types";
 import { copy, fill, formatError } from "../copy";
-import { applyPoint, learnBlocker, treeSpent } from "../engine";
+import { applyPoint, learnBlocker, prerequisiteIds, treeSpent } from "../engine";
 import { bgSrc, iconSrc } from "../paths";
 import { Icon } from "./Icon";
 
@@ -62,25 +62,26 @@ export function TalentTreePanel({
               <path d="M0,0 L6,3 L0,6" fill="context-stroke" />
             </marker>
           </defs>
-          {tree.talents.map((talent) => {
-            if (!talent.prerequisite) return null;
-            const prereqIndex = tree.talents.findIndex((item) => item.id === talent.prerequisite);
-            const prereq = tree.talents[prereqIndex];
-            if (!prereq) return null;
-            const x1 = (prereq.col - 0.5) * 100;
-            const y1 = (prereq.row - 1) * 86 + 60;
-            const x2 = (talent.col - 0.5) * 100;
-            const y2 = (talent.row - 1) * 86 + 5;
-            const mid = (y1 + y2) / 2;
-            return (
-              <path
-                key={talent.id}
-                d={`M${x1},${y1} V${mid} H${x2} V${y2}`}
-                className={ranks[prereqIndex] === prereq.maxRank ? "unlocked" : ""}
-                markerEnd={`url(#arrow-${tree.id})`}
-              />
-            );
-          })}
+          {tree.talents.flatMap((talent) =>
+            prerequisiteIds(talent).flatMap((prereqId) => {
+              const prereqIndex = tree.talents.findIndex((item) => item.id === prereqId);
+              const prereq = tree.talents[prereqIndex];
+              if (!prereq) return [];
+              const x1 = (prereq.col - 0.5) * 100;
+              const y1 = (prereq.row - 1) * 86 + 60;
+              const x2 = (talent.col - 0.5) * 100;
+              const y2 = (talent.row - 1) * 86 + 5;
+              const mid = (y1 + y2) / 2;
+              return [
+                <path
+                  key={`${talent.id}-${prereq.id}`}
+                  d={`M${x1},${y1} V${mid} H${x2} V${y2}`}
+                  className={ranks[prereqIndex] === prereq.maxRank ? "unlocked" : ""}
+                  markerEnd={`url(#arrow-${tree.id})`}
+                />,
+              ];
+            }),
+          )}
         </svg>
         <div className="talent-grid">
           {tree.talents.map((talent, talentIndex) => {

@@ -1,6 +1,6 @@
 import type { Talent, TalentTree } from "../types";
 import { copy, fill } from "../copy";
-import { nearestRankText, rankText } from "../engine";
+import { nearestRankText, prerequisiteIds, rankText } from "../engine";
 import { iconSrc } from "../paths";
 import { Icon } from "./Icon";
 
@@ -73,7 +73,9 @@ export function TalentDetail({
     );
   }
 
-  const prereq = tree.talents.find((item) => item.id === talent.prerequisite);
+  const prereqs = prerequisiteIds(talent)
+    .map((id) => tree.talents.find((item) => item.id === id))
+    .filter((item): item is NonNullable<typeof item> => !!item);
   const shownRank = Math.max(1, rank);
   const statusLabel =
     talent.classic.status === "new"
@@ -161,7 +163,9 @@ export function TalentDetail({
       )}
       <div className="talent-requirements">
         <span>{fill(copy.detail.rowReq, { row: talent.row, needed: (talent.row - 1) * 5 })}</span>
-        {prereq && <span>{fill(copy.detail.requiresRanks, { max: prereq.maxRank, talent: prereq.name })}</span>}
+        {prereqs.map((prereq) => (
+          <span key={prereq.id}>{fill(copy.detail.requiresRanks, { max: prereq.maxRank, talent: prereq.name })}</span>
+        ))}
       </div>
       <div className="detail-actions">
         <button type="button" className="button secondary" disabled={!!removeError} onClick={onRemove} title={removeError ?? copy.detail.refundTitle}>

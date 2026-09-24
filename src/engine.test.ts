@@ -266,7 +266,7 @@ describe("share links", () => {
     if (!learned.ok) return;
     build = learned.value;
     const encoded = encodeBuild(build);
-    expect(encoded).toMatch(/^#b=1~2026-09-15~warrior~40~/);
+    expect(encoded).toMatch(/^#b=1~2026-09-24~warrior~40~/);
     const decoded = decodeBuild(encoded, fixture);
     expect(decoded.ok).toBe(true);
     if (decoded.ok) expect(decoded.value).toEqual(build);

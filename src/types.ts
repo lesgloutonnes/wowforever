@@ -27,7 +27,7 @@ export interface Talent {
   col: number;
   icon: string;
   passive: boolean;
-  prerequisite: string | null;
+  prerequisite: string | string[] | null;
   requirementText: string | null;
   cost: string | null;
   note: string | null;
