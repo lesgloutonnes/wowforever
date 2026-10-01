@@ -211,7 +211,7 @@ export const copy = {
   footer: {
     tagline: "Fan-made · Niveau 60 = 51 points",
     credit:
-      "Noms, icônes et textes appartiennent à Blizzard Entertainment. Projet fan-made, non affilié à Blizzard.",
+      "Noms, icônes et textes appartiennent à Blizzard Entertainment. Projet fan-made, non affilié à Blizzard. Données du client bêta 1.60.1.70124.",
     note: "Les rangs manquants restent non vérifiés : aucune valeur n’est inventée pour combler les trous.",
   },
   directory: {
