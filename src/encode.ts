@@ -1,7 +1,7 @@
 import type { EngineResult, GameClass, TalentBuild } from "./types";
 import { validateBuild } from "./engine";
 
-export const DATA_VERSION = "2026-10-01";
+export const DATA_VERSION = "2026-10-12";
 const HASH_LIMIT = 600;
 
 export function encodeBuild(build: TalentBuild, dataVersion = DATA_VERSION): string {
